@@ -1,7 +1,7 @@
 version: 2026.240.1943
 kde-selkies:
     candy:
-        version: 2026.242.1345
+        version: 2026.242.2055
         description: |
             A full KDE Plasma Wayland session nested inside pixelflux and streamed over selkies/WebRTC
             The KDE Plasma flavor PRIMITIVE for the selkies streaming desktop: runs a
@@ -28,9 +28,9 @@ kde-selkies:
             shows on a real GPU output (that is kde-desktop's job).
         require:
             - '@github.com/opencharly/pod-selkies:v2026.242.1235'
-            - '@github.com/opencharly/layer-kde-shell:v2026.237.457'
-            - '@github.com/opencharly/pod-pipewire:v2026.235.2110'
-            - '@github.com/opencharly/pod-dbus:v2026.235.2115'
+            - '@github.com/opencharly/layer-kde-shell:v2026.239.1627'
+            - '@github.com/opencharly/pod-pipewire:v2026.239.1555'
+            - '@github.com/opencharly/pod-dbus:v2026.239.1555'
         env:
             SELKIES_FRAMERATE: "60"
         service:
