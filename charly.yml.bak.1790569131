@@ -1,5 +1,7 @@
+version: 2026.240.1943
 kde-selkies:
     candy:
+        version: 2026.243.0900
         description: |
             A full KDE Plasma Wayland session nested inside pixelflux and streamed over selkies/WebRTC
             The KDE Plasma flavor PRIMITIVE for the selkies streaming desktop: runs a
@@ -147,6 +149,7 @@ kde-selkies:
                 http: https://127.0.0.1:${HOST_PORT:3000}/
                 status: 200
                 allow_insecure: true
+
 kde-selkies-skill:
     skill:
         name: kde-selkies
@@ -156,17 +159,17 @@ kde-selkies-skill:
             The KDE nested-compositor PRIMITIVE for the selkies streaming desktop — startplasma-wayland nested in pixelflux, de-SDDM, started by a supervisord poll-for-wayland-1 service. MUST be invoked before editing the kde-selkies candy or its kde-selkies-session wrapper.
         content: |-
             # kde-selkies — KDE Plasma nested-compositor primitive (the KDE seam)
-
+            
             `kde-selkies` is the KDE analogue of the `labwc` candy: the swappable
             nested-compositor primitive that renders a desktop into pixelflux's `wayland-1`.
             It runs a FULL KDE Plasma Wayland session (`startplasma-wayland` =
             kwin_wayland + plasmashell) nested in pixelflux, so selkies streams Plasma.
-
+            
             ## Headless de-SDDM design (load-bearing)
-
+            
             `require: [selkies, kde-shell, pipewire, dbus]` — NOT `kde-desktop`. A pod has
             no DRM seat, no SDDM, no `graphical.target`. So:
-
+            
             - ONE supervisord service `kde-selkies-session` (priority 12, `scope: user`,
               `%(ENV_HOME)s` exec — resolves for both supervisord pods AND systemd-user
               targets via the service render (`sdk/deploykit`'s renderSeamCaller). **No `after: graphical-session.target`** —
@@ -183,21 +186,21 @@ kde-selkies-skill:
               socket kwin publishes, so it needs no per-flavor handoff and supervisord
               relaunches Chrome if it self-exits during the startup-race. Chrome works headless
               under KDE.
-
+            
             This headless-no-seat path is exercised by the `check-selkies-kde-pod` bed:
             `kde-selkies-session` RUNNING ≥20s, `https://:3000/` → 200, Chrome CDP
             `/json/version` → 200, plus the deploy-scope `wl` KWin checks this candy ships.
-
+            
             ## Encoder
-
+            
             `kde-selkies` sets NO `SELKIES_ENCODER` — pixelflux auto-detects at runtime
             (VAAPI on an AMD/Intel renderD via libva-native; NVENC from the cuda-arch-builder
             pixelflux on the `*-nvidia` box; x264 otherwise). So ONE kde-selkies candy
             streams on every GPU config. The encoder identity is asserted per-box in the
             GPU check beds, not here.
-
+            
             ## Related
-
+            
             - `/charly-selkies:labwc` — the other nested-compositor primitive (the labwc seam).
             - `/charly-selkies:kde-shell` — the SDDM-free Plasma session packages kde-selkies requires.
             - `/charly-selkies:selkies-kde-desktop` — the flavor metalayer composing this.
